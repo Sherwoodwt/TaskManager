@@ -23,15 +23,21 @@ class DateModel(models.Model):
         abstract = True
 
 class Task(DateModel):
-    user = models.ForeignKeyField(User, null=True)
-    name = models.CharField(max_length=150)
+    assignee = models.ForeignKey(User, null=True)
+    title = models.CharField(max_length=150)
     description = models.TextField()
-    created_by = models.ForeignKeyField(User)
-    difficulty = models.PositiveIntegerField(default=0, validators=[MaxValueValidator[5],])
+    created_by = models.CharField(max_length=100)
+    difficulty = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(5),])
     due_date = models.DateTimeField()
     finished = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
     
 class Comment(DateModel):
-    task = models.ForeignKeyField(Task)
-    created_by = models.ForeignKeyField(User)
+    task = models.ForeignKey(Task)
+    created_by = models.ForeignKey(User)
     text = models.TextField()
+
+    def __str__(self):
+        return self.text
