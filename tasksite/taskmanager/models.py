@@ -23,7 +23,7 @@ class DateModel(models.Model):
         abstract = True
 
 class Task(DateModel):
-    assignee = models.ForeignKey(User, null=True)
+    assignee = models.ForeignKey(User, null=True, blank=True)
     title = models.CharField(max_length=150)
     description = models.TextField()
     created_by = models.CharField(max_length=100)
