@@ -1,4 +1,9 @@
 {%extends 'toolbar_base.html'%}
 {%block body%}
     This is the list page
+    <ul>
+        {%for task in tasks%}
+            <li>{{task}}</li>
+        {%endfor%}
+    </ul>
 {%endblock%}

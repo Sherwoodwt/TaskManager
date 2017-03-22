@@ -15,9 +15,9 @@ class DateModel(models.Model):
     def save(self, *args, **kwargs):
         '''Create or Update date set to current time on save'''
         if not self.id:
-            created_at = timezone.now()
-        updated_at = timezone.now()
-        return super(Task, self).save(*args, **kwargs)
+            self.created_at = timezone.now()
+        self.updated_at = timezone.now()
+        super(DateModel, self).save(*args, **kwargs)
 
     class Meta:
         abstract = True
@@ -31,7 +31,7 @@ class Task(DateModel):
     due_date = models.DateTimeField()
     finished = models.BooleanField(default=False)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.title
     
 class Comment(DateModel):
@@ -39,5 +39,5 @@ class Comment(DateModel):
     created_by = models.ForeignKey(User)
     text = models.TextField()
 
-    def __str__(self):
+    def __unicode__(self):
         return self.text
