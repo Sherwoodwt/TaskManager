@@ -1,0 +1,41 @@
+{%if task.finished%}
+    <div class="card card-outline-success">
+{%else%}
+    <div class="card card-outline-secondary">
+{%endif%}
+        <div class="card-header">
+        {%if task.assignee%}
+            {%if task.assignee is user%}
+                <a class="btn btn-primary" href="#" role="button">Finish Task</a>
+            {%else%}
+                Assigned to: <strong>{{task.assignee}}</strong>
+            {%endif%}
+        {%else%}
+            <a class="btn btn-info" href="#" role="button">Accept Task</a>
+        {%endif%}
+        <a
+            class="btn btn-sm btn-outline-secondary text-muted float-right"
+            href="{%url 'editTask' task_id=task.id%}"
+            role="button"
+        >Edit</a>
+    </div>
+    <div class="card-block text-xs-center">
+        <p class="card-text">{{task.description}}</p>
+    </div>
+    <div class="card-block text-xs-center">
+        <h6>Difficulty: {{task.difficulty}}</h6>
+        <h6>Due Date: {{task.due_date.date}}</h6>
+    </div>
+    <div class="card-footer text-muted">
+        <span class="float-left">
+            Created by: <strong>{{task.created_by}}</strong>
+        </span>
+        <span class="float-right">
+            {%if updated_at%}
+                Last updated: <strong>{{task.updated_at}}</strong>
+            {%else%}
+                Created on: <strong>{{task.created_at}}</strong>
+            {%endif%}
+        </span>
+    </div>
+</div>

@@ -36,7 +36,11 @@ def edit_task(request, task_id):
 
 @login_required
 def view_task(request, task_id):
-    return render(request, 'task_templates/view.html')
+    task = get_object_or_404(Task, pk=task_id)
+    context = {
+        'task': task,
+    }
+    return render(request, 'task_templates/view.html', context)
 
 @login_required
 def delete_task(request, task_id):

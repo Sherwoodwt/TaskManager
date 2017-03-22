@@ -15,8 +15,8 @@ class DateModel(models.Model):
     def save(self, *args, **kwargs):
         '''Create or Update date set to current time on save'''
         if not self.id:
-            self.created_at = timezone.now()
-        self.updated_at = timezone.now()
+            self.created_at = timezone.localtime(timezone.now())
+        self.updated_at = timezone.localtime(timezone.now())
         super(DateModel, self).save(*args, **kwargs)
 
     class Meta:

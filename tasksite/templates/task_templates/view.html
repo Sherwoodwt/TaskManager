@@ -1,4 +1,5 @@
 {%extends 'toolbar_base.html'%}
 {%block body%}
-    This is the view page
+    <h2 class="col-8">{{task}}</h2>
+    {%include 'task_templates/task_card.html'%}
 {%endblock%}
