@@ -32,7 +32,27 @@ def create_task(request):
 
 @login_required
 def edit_task(request, task_id):
-    return render(request, 'task_templates/create_edit.html')
+    task = get_object_or_404(Task, pk=task_id)
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid:
+            instance = form.save(commit=False)
+            instance.id = task_id
+            instance.save()
+            return HttpResponseRedirect(reverse('viewTask', kwargs={'task_id': task_id}))
+    else:
+        fields = {
+            'title': task.title,
+            'description': task.description,
+            'assignee': task.assignee,
+            'difficulty': task.difficulty,
+            'due_date': task.due_date,
+        }
+        form = TaskForm(initial=fields)
+        context = {
+            'form': form,
+        }
+    return render(request, 'task_templates/create_edit.html', context)
 
 @login_required
 def view_task(request, task_id):
@@ -44,4 +64,6 @@ def view_task(request, task_id):
 
 @login_required
 def delete_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    task.delete()
     return HttpResponseRedirect(reverse('tasklist'))

@@ -1,5 +1,6 @@
 {%extends 'toolbar_base.html'%}
 {%block body%}
+    <a class="btn btn-primary" href="{%url 'createTask'%}" role="button">+ Add</a>
     <div class="list-group">
         {%for task in tasks%}
             <a

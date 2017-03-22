@@ -14,6 +14,11 @@
             <a class="btn btn-info" href="#" role="button">Accept Task</a>
         {%endif%}
         <a
+            class="btn btn-sm btn-outline-danger float-right"
+            href="{%url 'deleteTask' task_id=task.id%}"
+            role="button"
+        >Delete</a>
+        <a
             class="btn btn-sm btn-outline-secondary text-muted float-right"
             href="{%url 'editTask' task_id=task.id%}"
             role="button"
