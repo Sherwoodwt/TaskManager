@@ -23,16 +23,31 @@ class DateModel(models.Model):
         abstract = True
 
 class Task(DateModel):
-    assignee = models.ForeignKey(User, null=True, blank=True)
+    assignee = models.ForeignKey(User, null=True, blank=True, related_name='assignee')
     title = models.CharField(max_length=150)
     description = models.TextField()
-    created_by = models.CharField(max_length=100)
+    created_by = models.ForeignKey(User, null=True, blank=True, related_name='created_by')
     difficulty = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(5),])
     due_date = models.DateTimeField()
     finished = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.title
+
+    # logic
+    def accept(self, user):
+        '''
+        takes the passed in user and makes it the assignee of the task
+        '''
+        self.assignee = user
+        self.save()
+
+    def finish(self):
+        '''
+        marks task as finished
+        '''
+        self.finished = True
+        self.save()
     
 class Comment(DateModel):
     task = models.ForeignKey(Task)

@@ -22,8 +22,9 @@ def create_task(request):
     form = TaskForm(request.POST or None)
     if form.is_valid():
         instance = form.save(commit=False)
-        instance.created_by = request.user.username
+        instance.created_by = request.user
         instance.save()
+        print(instance.id)
         return HttpResponseRedirect(reverse('tasklist'))
     context = {
         'form': form,
@@ -37,8 +38,12 @@ def edit_task(request, task_id):
         form = TaskForm(request.POST)
         if form.is_valid:
             instance = form.save(commit=False)
-            instance.id = task_id
-            instance.save()
+            task.title = instance.title
+            task.description = instance.description
+            task.assignee = instance.assignee
+            task.difficulty = instance.difficulty
+            task.due_date = instance.due_date
+            task.save()
             return HttpResponseRedirect(reverse('viewTask', kwargs={'task_id': task_id}))
     else:
         fields = {
@@ -62,8 +67,24 @@ def view_task(request, task_id):
     }
     return render(request, 'task_templates/view.html', context)
 
+##################
+# Business Logic #
+##################
+
 @login_required
 def delete_task(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
     task.delete()
     return HttpResponseRedirect(reverse('tasklist'))
+
+@login_required
+def accept_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    task.accept(request.user)
+    return HttpResponseRedirect(reverse('viewTask', kwargs={'task_id': task_id}))
+
+@login_required
+def finish_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    task.finish()
+    return HttpResponseRedirect(reverse('viewTask', kwargs={'task_id': task_id}))

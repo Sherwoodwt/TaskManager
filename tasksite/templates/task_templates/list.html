@@ -3,10 +3,22 @@
     <a class="btn btn-primary" href="{%url 'createTask'%}" role="button">+ Add</a>
     <div class="list-group">
         {%for task in tasks%}
-            <a
-                href="{%url 'viewTask' task_id=task.id%}"
-                class="list-group-item list-group-item-action"
-            >{{task}}</a>
+                <a
+                    href="{%url 'viewTask' task_id=task.id%}"
+                    {%if task.finished%}
+                        class="list-group-item list-group-item-action list-group-item-success"
+                    {%else%}
+                        class="list-group-item list-group-item-action"
+                    {%endif%}
+                    style="display: block"
+                >
+                    {{task}}
+                    {%if task.assignee%}
+                    <span class="float-right">
+                        <small><strong>{{task.assignee}}</strong></small>
+                    </span>
+                    {%endif%}
+                </a>
         {%endfor%}
     </div>
 {%endblock%}

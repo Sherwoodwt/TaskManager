@@ -1,5 +1,14 @@
 {%extends 'toolbar_base.html'%}
 {%block body%}
-    <h2 class="col-8">{{task}}</h2>
+    <span>
+        <h2 style="display: inline;" class="col-8">{{task}}</h2>
+        {%if task.finished%}
+            <img
+                src="https://s3-us-west-2.amazonaws.com/trevorstaskmanager/complete.png"
+                width="30px"
+                height="30px"
+            />
+        {%endif%}
+    </span>
     {%include 'task_templates/task_card.html'%}
 {%endblock%}

@@ -135,4 +135,3 @@ REGISTRATION_AUTO_LOGIN = True  # If True, the user will be automatically logged
 LOGIN_REDIRECT_URL = current_stage + 'taskmanager/'  # After successful log in
 LOGIN_URL = current_stage + 'accounts/login/'  # The page users are directed to if they are not logged in,
                                 # and are trying to access pages requiring authentication
-
