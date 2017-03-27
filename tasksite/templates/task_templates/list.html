@@ -1,6 +1,13 @@
 {%extends 'toolbar_base.html'%}
 {%block body%}
     <a class="btn btn-primary" href="{%url 'createTask'%}" role="button">+ Add</a>
+    <select>
+        <option value="{{user.pk}}">You</option>
+        {%for other in other_users%}
+            <option value="{{other.pk}}">{{other.username}}</option>
+        {%endfor%}
+        <option value="0">Unassigned</option>
+    </select>
     <div class="list-group">
         {%for task in tasks%}
                 <a
@@ -15,7 +22,8 @@
                     {{task}}
                     {%if task.assignee%}
                     <span class="float-right">
-                        <small><strong>{{task.assignee}}</strong></small>
+                        <small><strong>{{task.assignee}}</strong>
+                        </small>
                     </span>
                     {%endif%}
                 </a>

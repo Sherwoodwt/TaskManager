@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 
 from django.http import HttpResponse, HttpResponseRedirect
 
+from django.contrib.auth.models import User
+
 from forms import TaskForm
 from models import Task
 
@@ -12,8 +14,10 @@ from models import Task
 @login_required
 def tasks(request):
     tasks = Task.objects.all()
+    other_users = User.objects.all().exclude(pk=request.user.pk)
     context = {
-        'tasks': tasks
+        'tasks': tasks,
+        'other_users': other_users,
     }
     return render(request, 'task_templates/list.html', context)
 
