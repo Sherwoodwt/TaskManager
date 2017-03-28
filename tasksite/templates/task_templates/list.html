@@ -1,21 +1,24 @@
 {%extends 'toolbar_base.html'%}
 {%block body%}
     <a class="btn btn-primary" href="{%url 'createTask'%}" role="button">+ Add</a>
-    <select>
+    <select id="filters">
+        <option value="0">All</option>
         <option value="{{user.pk}}">You</option>
         {%for other in other_users%}
             <option value="{{other.pk}}">{{other.username}}</option>
         {%endfor%}
-        <option value="0">Unassigned</option>
+        <option value="None">Unassigned</option>
     </select>
     <div class="list-group">
         {%for task in tasks%}
                 <a
+                    data-value="{{task.assignee.pk}}"
+                    data-finished="{{task.finished}}"
                     href="{%url 'viewTask' task_id=task.id%}"
                     {%if task.finished%}
-                        class="list-group-item list-group-item-action list-group-item-success"
+                        class="task list-group-item list-group-item-action list-group-item-success"
                     {%else%}
-                        class="list-group-item list-group-item-action"
+                        class="task list-group-item list-group-item-action"
                     {%endif%}
                     style="display: block"
                 >
