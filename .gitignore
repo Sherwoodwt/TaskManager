@@ -1,3 +1,4 @@
 secret_info.py
 *.pyc
 env
+zappa*

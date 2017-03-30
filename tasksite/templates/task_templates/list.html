@@ -1,7 +1,7 @@
 {%extends 'toolbar_base.html'%}
 {%block body%}
     <a class="btn btn-primary" href="{%url 'createTask'%}" role="button">+ Add</a>
-    <select id="filters">
+    <select id="filters" class="float-right">
         <option value="0">All</option>
         <option value="{{user.pk}}">You</option>
         {%for other in other_users%}

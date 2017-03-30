@@ -14,7 +14,7 @@ import os
 
 from secret_info import SECRET_KEY, DB_PASSWORD
 
-current_stage = '/'
+current_stage = '/dev/'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,7 +29,7 @@ SECRET_KEY = SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['u7gtra0h5f.execute-api.us-west-2.amazonaws.com']
 
 
 # Application definition

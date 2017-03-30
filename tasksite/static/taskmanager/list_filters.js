@@ -35,4 +35,9 @@ $(document).ready(function() {
             }
         })
     }
+
+    $('button[type=submit]').click(function() {
+        $(this).attr('disabled', 'disabled');
+        $(this).parents('form').submit();
+    })
 })
