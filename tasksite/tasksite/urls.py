@@ -16,10 +16,12 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from views import MyRegistrationView
+from django.contrib.auth.views import logout
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/register/$', MyRegistrationView.as_view(), name='registration_register'),
+    url(r'^accounts/logout/$', logout, name='logout'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^tasks/', include('taskmanager.urls')),
 ]

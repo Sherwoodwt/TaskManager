@@ -22,8 +22,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ''
 
-CURRENT_STAGE = ''
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -124,11 +122,3 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     '/var/www/static/',
 ]
-
-REGISTRATION_OPEN = True        # If True, users can register
-ACCOUNT_ACTIVATION_DAYS = 7     # activation window
-REGISTRATION_AUTO_LOGIN = True  # If True, the user will be automatically logged in.
-LOGIN_REDIRECT_URL = CURRENT_STAGE + 'tasks/'  # After successful log in
-LOGIN_URL = CURRENT_STAGE + 'accounts/login/'  # The page users are directed to if they are not logged in,
-                                # and are trying to access pages requiring authentication
-LOGOUT_REDIRECT_URL = CURRENT_STAGE + 'tasks/'
