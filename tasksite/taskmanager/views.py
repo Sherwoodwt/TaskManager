@@ -13,7 +13,7 @@ from models import Task
 
 @login_required
 def tasks(request):
-    tasks = Task.objects.all()
+    tasks = Task.objects.all().order_by('-created_at')
     other_users = User.objects.all().exclude(pk=request.user.pk)
     context = {
         'tasks': tasks,
