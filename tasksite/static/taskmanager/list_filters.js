@@ -40,4 +40,8 @@ $(document).ready(function() {
         $(this).attr('disabled', 'disabled');
         $(this).parents('form').submit();
     })
+
+    $('#unfinished').click(function() {
+        window.location.replace($(this).attr('view-url'));
+    })
 })

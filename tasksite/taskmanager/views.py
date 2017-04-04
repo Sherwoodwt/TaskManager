@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 from django.contrib.auth.models import User
 
@@ -14,6 +14,9 @@ from models import Task
 @login_required
 def tasks(request):
     tasks = Task.objects.all().order_by('-created_at')
+    unfinished = request.session.get('unfinished')
+    if unfinished:
+        tasks = tasks.filter(finished=False)
     other_users = User.objects.all().exclude(pk=request.user.pk)
     context = {
         'tasks': tasks,
@@ -92,3 +95,11 @@ def finish_task(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
     task.finish()
     return HttpResponseRedirect(reverse('viewTask', kwargs={'task_id': task_id}))
+
+# Trying out ajax with this, but it doesn't seem to be very consistent
+# It isn't good for filtering either once pagination is introduced
+# Research ajax and when I should be using it in an app like this
+@login_required
+def finished_filter(request):
+    request.session['unfinished'] = not request.session.get('unfinished')
+    return HttpResponseRedirect(reverse('tasklist'))

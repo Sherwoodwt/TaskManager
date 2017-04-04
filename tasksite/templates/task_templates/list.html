@@ -1,14 +1,36 @@
 {%extends 'toolbar_base.html'%}
 {%block body%}
-    <a class="btn btn-primary" href="{%url 'createTask'%}" role="button">+ Add</a>
-    <select id="filters" class="float-right">
-        <option value="0">All</option>
-        <option value="{{user.pk}}">You</option>
-        {%for other in other_users%}
-            <option value="{{other.pk}}">{{other.username}}</option>
-        {%endfor%}
-        <option value="None">Unassigned</option>
-    </select>
+    <div class="row">
+        <div class="col-6">
+            <a class="btn btn-primary" href="{%url 'createTask'%}" role="button">+ Add</a>
+        </div>
+        <div class="col-3">
+            <div class="btn-group" data-toggle="buttons">
+                <label 
+                    class="btn btn-sm btn-outline-info"
+                    view-url="{%url 'finishedFilter'%}"
+                    id="unfinished"
+                >
+                    unfinished
+                    <input
+                        type="checkbox"
+                        autocomplete="off"
+                        id="unfinishedValue"
+                    >
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <select id="filters">
+                <option value="0">All</option>
+                <option value="{{user.pk}}">You</option>
+                {%for other in other_users%}
+                    <option value="{{other.pk}}">{{other.username}}</option>
+                {%endfor%}
+                <option value="None">Unassigned</option>
+            </select>
+        </div>
+    </div>
     <div class="list-group">
         {%for task in tasks%}
                 <a
