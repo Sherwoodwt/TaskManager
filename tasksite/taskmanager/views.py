@@ -21,6 +21,7 @@ def tasks(request):
     context = {
         'tasks': tasks,
         'other_users': other_users,
+        'unfinished': request.session.get('unfinished'),
     }
     return render(request, 'task_templates/list.html', context)
 
@@ -96,9 +97,6 @@ def finish_task(request, task_id):
     task.finish()
     return HttpResponseRedirect(reverse('viewTask', kwargs={'task_id': task_id}))
 
-# Trying out ajax with this, but it doesn't seem to be very consistent
-# It isn't good for filtering either once pagination is introduced
-# Research ajax and when I should be using it in an app like this
 @login_required
 def finished_filter(request):
     request.session['unfinished'] = not request.session.get('unfinished')
