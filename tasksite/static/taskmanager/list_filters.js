@@ -43,5 +43,6 @@ $(document).ready(function() {
 
     $('#unfinished').click(function() {
         window.location.replace($(this).attr('view-url'));
+        $(this).attr('disabled', 'disabled');
     })
 })
