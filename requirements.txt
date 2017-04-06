@@ -11,6 +11,8 @@ colorama==0.3.7
 configparser==3.5.0
 Django==1.10.5
 django-registration-redux==1.4
+django-storages==1.5.2
+django-tinymce==2.6.0
 docutils==0.13.1
 durationpy==0.3
 futures==3.0.5
