@@ -1,0 +1,12 @@
+<div class="card">
+    <div class="card-header text-muted">
+        Leave a Comment
+    </div>
+    <div class="card-block">
+        <form method="POST">
+            {%csrf_token%}
+            {{commentform.as_p}}
+            <button type="submit" class="submit btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>

@@ -6,8 +6,8 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 from django.contrib.auth.models import User
 
-from forms import TaskForm
-from models import Task
+from forms import TaskForm, CommentForm
+from models import Task, Comment
 
 # Create your views here.
 
@@ -32,7 +32,6 @@ def create_task(request):
         instance = form.save(commit=False)
         instance.created_by = request.user
         instance.save()
-        print(instance.id)
         return HttpResponseRedirect(reverse('tasklist'))
     context = {
         'form': form,
@@ -70,8 +69,18 @@ def edit_task(request, task_id):
 @login_required
 def view_task(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
+    comments = Comment.objects.filter(task=task)
+    commentform = CommentForm(request.POST or None)
+    if commentform.is_valid():
+        instance = commentform.save(commit=False)
+        instance.created_by = request.user
+        instance.task = task
+        instance.save()
+        commentform = CommentForm()
     context = {
         'task': task,
+        'comments': comments,
+        'commentform': commentform,
     }
     return render(request, 'task_templates/view.html', context)
 

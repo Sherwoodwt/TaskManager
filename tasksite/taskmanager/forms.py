@@ -1,5 +1,5 @@
 from django import forms
-from models import Task
+from models import Task, Comment
 
 from django.forms.extras.widgets import SelectDateWidget
 
@@ -18,4 +18,16 @@ class TaskForm(forms.ModelForm):
 
         widgets = {
             'due_date': SelectDateWidget(),
+        }
+
+class CommentForm(forms.ModelForm):
+    
+    class Meta:
+        model = Comment
+        fields = (
+            'text',
+        )
+
+        widgets = {
+            'text': forms.Textarea(attrs={'class': 'form-control', 'rows': '3'})
         }

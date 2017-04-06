@@ -49,12 +49,17 @@
                     style="display: block"
                 >
                     {{task}}
-                    {%if task.assignee%}
+                    {% if task.comment_set.all|length > 0 %}
+                    <span class="float-right" style="margin-left: 5px">
+                        <small>{{task.comment_set.all|length}}</small>
+                    </span>
+                    {% endif %}
+                    {% if task.assignee %}
                     <span class="float-right">
                         <small><strong>{{task.assignee}}</strong>
                         </small>
                     </span>
-                    {%endif%}
+                    {% endif %}
                 </a>
         {%endfor%}
     </div>

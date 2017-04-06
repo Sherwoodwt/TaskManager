@@ -12,4 +12,11 @@
         {%endif%}
     </span>
     {%include 'task_templates/task_card.html'%}
+    {%for comment in comments%}
+        <br />
+        {%include 'task_templates/comment_card.html'%}
+    {%endfor%}
+    <br />
+    {%include 'task_templates/create_comment.html'%}
+    <br />
 {%endblock%}

@@ -30,7 +30,9 @@
         <p class="card-text">{{task.description}}</p>
     </div>
     <div class="card-block text-xs-center">
-        <h6>Difficulty: {{task.difficulty}}</h6>
+        {%if task.difficulty > 0%}
+            <h6>Difficulty: {{task.difficulty}}</h6>
+        {%endif%}
         <h6>Due Date: {{task.due_date.date}}</h6>
     </div>
     <div class="card-footer text-muted">
