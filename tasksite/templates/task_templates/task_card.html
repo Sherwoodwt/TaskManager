@@ -27,7 +27,7 @@
         {%endif%}
     </div>
     <div class="card-block text-xs-center">
-        <p class="card-text">{{task.description}}</p>
+        <p class="card-text">{{task.description|linebreaks}}</p>
     </div>
     <div class="card-block text-xs-center">
         {%if task.difficulty > 0%}
