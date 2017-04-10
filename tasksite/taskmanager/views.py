@@ -7,7 +7,9 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
 
 from forms import TaskForm, CommentForm
-from models import Task, Comment
+from models import Task, Comment, UserProfile
+
+import boto3
 
 # Create your views here.
 
@@ -32,6 +34,8 @@ def create_task(request):
         instance = form.save(commit=False)
         instance.created_by = request.user
         instance.save()
+        if instance.assignee != None and instance.created_by != instance.assignee:
+            print(instance.title)
         return HttpResponseRedirect(reverse('tasklist'))
     context = {
         'form': form,

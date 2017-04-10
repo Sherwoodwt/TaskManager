@@ -3,9 +3,20 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
 
+from django.conf import settings
+
 from django.db import models
 
 # Create your models here.
+
+class UserProfile(models.Model):
+    '''User-wrapping class to extend user functionality'''
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    is_notifiable = models.BooleanField(default=False)
+    notification_arn = models.CharField(max_length=200, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.user.username
 
 class DateModel(models.Model):
     '''Abstract model to include created_at and updated_at'''
