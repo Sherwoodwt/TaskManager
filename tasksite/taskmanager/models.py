@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from django.conf import settings
 
@@ -11,12 +13,22 @@ from django.db import models
 
 class UserProfile(models.Model):
     '''User-wrapping class to extend user functionality'''
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_notifiable = models.BooleanField(default=False)
     notification_arn = models.CharField(max_length=200, blank=True, null=True)
+    subscription_arn = models.CharField(max_length=200, blank=True, null=True)
 
     def __unicode__(self):
         return self.user.username
+
+# When a user is saved, if it doesn't already exists a profile is made for it
+@receiver(post_save, sender=User)
+def save_user_profile(sender, **kwargs):
+    instance = kwargs.get('instance')
+    profiles = UserProfile.objects.filter(user=instance)
+    if len(profiles) == 0:
+        instance.userprofile = UserProfile(user=instance)
+        instance.userprofile.save()
 
 class DateModel(models.Model):
     '''Abstract model to include created_at and updated_at'''

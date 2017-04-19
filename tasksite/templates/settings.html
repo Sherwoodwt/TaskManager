@@ -1,0 +1,22 @@
+{%extends 'toolbar_base.html'%}
+
+{%block body%}
+    <div class="card">
+        <div class="card-header">
+            Notifications
+        </div>
+        <div class="card-block">
+            <div class="row">
+                {%if is_notifiable%}
+                    <a class="btn btn-primary" href="{%url 'switchNotifications'%}" role="button">
+                        Notifications are currently on
+                    </a>
+                {%else%}
+                    <a class="btn btn-danger" href="{%url 'switchNotifications'%}" role="button">
+                        Notifications are currently off
+                    </a>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+{%endblock%}
