@@ -23,10 +23,9 @@ class UserProfile(models.Model):
 
 # When a user is saved, if it doesn't already exists a profile is made for it
 @receiver(post_save, sender=User)
-def save_user_profile(sender, **kwargs):
+def save_user_profile(sender, created, **kwargs):
     instance = kwargs.get('instance')
-    profiles = UserProfile.objects.filter(user=instance)
-    if len(profiles) == 0:
+    if instance.userprofile is None:
         instance.userprofile = UserProfile(user=instance)
         instance.userprofile.save()
 
@@ -37,7 +36,7 @@ class DateModel(models.Model):
 
     def save(self, *args, **kwargs):
         '''Create or Update date set to current time on save'''
-        if not self.id:
+        if not self.pk:
             self.created_at = timezone.localtime(timezone.now())
         self.updated_at = timezone.localtime(timezone.now())
         super(DateModel, self).save(*args, **kwargs)
@@ -71,7 +70,7 @@ class Task(DateModel):
         '''
         self.finished = True
         self.save()
-    
+
 class Comment(DateModel):
     task = models.ForeignKey(Task)
     created_by = models.ForeignKey(User)

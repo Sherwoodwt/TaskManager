@@ -141,15 +141,11 @@ def notify_user(user, subject, message):
     '''
     profile = user.userprofile
     sns = boto3.resource('sns')
-    subscription = profile.subscription_arn
-    print(profile.is_notifiable)
-    print(profile.notifcation_arn)
     if (
         profile.is_notifiable
         and profile.notification_arn
     ):
         topic = sns.Topic(profile.notification_arn)
-        print(topic)
         topic.publish(Subject=subject, Message=message)
 
 def create_topic(user):
@@ -207,9 +203,8 @@ def switch_notifications(request):
     profile = request.user.userprofile
     profile.is_notifiable = not profile.is_notifiable
     if profile.is_notifiable and profile.notification_arn is None:
-        profile.notifcation_arn = create_topic(request.user)
-        print(profile.notification_arn)
-        profile.subscription_arn = create_subscription(profile.notifcation_arn, request.user)
+        profile.notification_arn = create_topic(request.user)
+        profile.subscription_arn = create_subscription(profile.notification_arn, request.user)
     profile.save()
     return HttpResponseRedirect(reverse('settings'))
     
