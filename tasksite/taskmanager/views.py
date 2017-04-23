@@ -53,7 +53,10 @@ def create_task(request):
         instance.created_by = request.user
         instance.save()
         if instance.assignee != None and instance.created_by != instance.assignee:
-            notify_assigned_task(instance)
+            notify_assigned_task(
+                instance,
+                request.build_absolute_uri(request.get_full_path())
+            )
         return HttpResponseRedirect(reverse('tasklist'))
     context = {
         'form': form,
@@ -78,7 +81,10 @@ def edit_task(request, task_id):
             task.due_date = instance.due_date
             task.save()
             if will_notify:
-                notify_assigned_task(task)
+                notify_assigned_task(
+                    task,
+                    request.build_absolute_uri(request.get_full_path())
+                )
             return HttpResponseRedirect(reverse('viewTask', kwargs={'task_id': task_id}))
     else:
         fields = {
@@ -105,7 +111,10 @@ def view_task(request, task_id):
         instance.task = task
         instance.save()
         if instance.created_by != instance.task.assignee:
-            notify_comment(instance)
+            notify_comment(
+                instance,
+                request.build_absolute_uri(request.get_full_path())
+            )
         commentform = CommentForm()
     context = {
         'task': task,

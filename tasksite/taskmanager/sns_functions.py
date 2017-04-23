@@ -4,7 +4,9 @@ Library of sns functions
 
 import boto3
 
-def notify_comment(comment):
+from django.conf import settings
+
+def notify_comment(comment, url):
     '''
     @param comment: Comment made on task
     '''
@@ -12,10 +14,10 @@ def notify_comment(comment):
     target = task.assignee
     commenter = comment.created_by
     subject = commenter.username + " has commented on the task '" + task.title + "'"
-    message = comment.text
+    message = comment.text + "\n\nurl: " + url + "\n\n\n\n"
     notify_user(target, subject, message)
 
-def notify_assigned_task(task):
+def notify_assigned_task(task, url):
     '''
     @param task: Task that has been assigned to somebody
     '''
@@ -25,7 +27,8 @@ def notify_assigned_task(task):
     message = (
         task.title +
         "\n\nI can't give you a link to it yet so you're gonna have to go to the site manually."
-        "\nDue Date: " + str(task.due_date)
+        "\nDue Date: " + str(task.due_date) +
+        "\n\nurl: " + url + "\n\n\n\n"
     )
     notify_user(assignee, subject, message)
 
