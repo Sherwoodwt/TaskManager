@@ -8,7 +8,12 @@ def notify_comment(comment):
     '''
     @param comment: Comment made on task
     '''
-    
+    task = comment.task
+    target = task.assignee
+    commenter = comment.created_by
+    subject = commenter.username + " has commented on the task '" + task.title + "'"
+    message = comment.text
+    notify_user(target, subject, message)
 
 def notify_assigned_task(task):
     '''

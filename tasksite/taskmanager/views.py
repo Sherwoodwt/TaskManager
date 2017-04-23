@@ -104,6 +104,8 @@ def view_task(request, task_id):
         instance.created_by = request.user
         instance.task = task
         instance.save()
+        if instance.created_by != instance.task.assignee:
+            notify_comment(instance)
         commentform = CommentForm()
     context = {
         'task': task,
@@ -111,12 +113,6 @@ def view_task(request, task_id):
         'commentform': commentform,
     }
     return render(request, 'task_templates/view.html', context)
-
-#############
-# Functions #
-#############
-
-
 
 
 ####################
