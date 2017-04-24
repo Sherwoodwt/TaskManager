@@ -7,9 +7,29 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
 
 from forms import TaskForm, CommentForm
-from models import Task, Comment
+from models import Task, Comment, UserProfile
+
+from sns_functions import *
 
 # Create your views here.
+
+@login_required
+def create_user_profile_or_skip(request):
+    '''
+    If request.user has no userprofile, it is created, otherwise move on to main page.
+    This ensures that all logged in users have UserProfiles.
+    '''
+    if not UserProfile.objects.filter(user=request.user):
+        user_profile = UserProfile(user=request.user)
+        user_profile.save()
+    return HttpResponseRedirect(reverse('tasklist'))
+
+@login_required
+def settings(request):
+    context = {
+        "is_notifiable": request.user.userprofile.is_notifiable,
+    }
+    return render(request, 'settings.html', context)
 
 @login_required
 def tasks(request):
@@ -32,6 +52,11 @@ def create_task(request):
         instance = form.save(commit=False)
         instance.created_by = request.user
         instance.save()
+        if instance.assignee != None and instance.created_by != instance.assignee:
+            notify_assigned_task(
+                instance,
+                request.build_absolute_uri(request.get_full_path())
+            )
         return HttpResponseRedirect(reverse('tasklist'))
     context = {
         'form': form,
@@ -45,12 +70,21 @@ def edit_task(request, task_id):
         form = TaskForm(request.POST)
         if form.is_valid:
             instance = form.save(commit=False)
+            will_notify = False
+            if instance.assignee != task.created_by:
+                will_notify = True
+
             task.title = instance.title
             task.description = instance.description
             task.assignee = instance.assignee
             task.difficulty = instance.difficulty
             task.due_date = instance.due_date
             task.save()
+            if will_notify:
+                notify_assigned_task(
+                    task,
+                    request.build_absolute_uri(request.get_full_path())
+                )
             return HttpResponseRedirect(reverse('viewTask', kwargs={'task_id': task_id}))
     else:
         fields = {
@@ -76,6 +110,23 @@ def view_task(request, task_id):
         instance.created_by = request.user
         instance.task = task
         instance.save()
+        
+        comments_list = Comment.objects.filter(task=task)
+        targets = []
+        for comment in comments:
+            if comment.created_by not in targets:
+                targets.append(comment.created_by)
+        if task.assignee not in targets:
+            targets.append(task.assignee)
+        if task.created_by not in targets:
+            targets.append(task.created_by)
+        if request.user in targets:
+            targets.remove(request.user)
+        notify_comment(
+            instance,
+            request.build_absolute_uri(request.get_full_path()),
+            targets
+        )
         commentform = CommentForm()
     context = {
         'task': task,
@@ -84,9 +135,10 @@ def view_task(request, task_id):
     }
     return render(request, 'task_templates/view.html', context)
 
-##################
-# Business Logic #
-##################
+
+####################
+# Additional Views #
+####################
 
 @login_required
 def delete_task(request, task_id):
@@ -110,3 +162,13 @@ def finish_task(request, task_id):
 def finished_filter(request):
     request.session['unfinished'] = not request.session.get('unfinished')
     return HttpResponseRedirect(reverse('tasklist'))
+
+@login_required
+def switch_notifications(request):
+    profile = request.user.userprofile
+    profile.is_notifiable = not profile.is_notifiable
+    if profile.is_notifiable and profile.notification_arn is None:
+        profile.notification_arn = create_topic(request.user)
+        profile.subscription_arn = create_subscription(profile.notification_arn, request.user)
+    profile.save()
+    return HttpResponseRedirect(reverse('settings'))
