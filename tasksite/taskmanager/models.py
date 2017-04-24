@@ -13,7 +13,7 @@ from django.db import models
 
 class UserProfile(models.Model):
     '''User-wrapping class to extend user functionality'''
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     is_notifiable = models.BooleanField(default=False)
     notification_arn = models.CharField(max_length=200, blank=True, null=True)
     subscription_arn = models.CharField(max_length=200, blank=True, null=True)
@@ -25,7 +25,8 @@ class UserProfile(models.Model):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, created, **kwargs):
     instance = kwargs.get('instance')
-    if instance.userprofile is None:
+    profiles = UserProfile.objects.filter(user=instance)
+    if len(profiles) == 0:
         instance.userprofile = UserProfile(user=instance)
         instance.userprofile.save()
 

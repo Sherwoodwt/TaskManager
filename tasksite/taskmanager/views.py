@@ -71,7 +71,7 @@ def edit_task(request, task_id):
         if form.is_valid:
             instance = form.save(commit=False)
             will_notify = False
-            if instance.assignee != task.assignee:
+            if instance.assignee != task.created_by:
                 will_notify = True
 
             task.title = instance.title
@@ -110,10 +110,20 @@ def view_task(request, task_id):
         instance.created_by = request.user
         instance.task = task
         instance.save()
+        
+        comments = comments.exclude(created_by=request.user)
+        targets = []
+        for comment in comments:
+            targets.append(comment.created_by)
+        if task.assignee not in targets:
+            targets.append(task.assignee)
+        if task.created_by not in targets:
+            targets.append(task.created_by)
         if instance.created_by != instance.task.assignee:
             notify_comment(
                 instance,
-                request.build_absolute_uri(request.get_full_path())
+                request.build_absolute_uri(request.get_full_path()),
+                targets
             )
         commentform = CommentForm()
     context = {
