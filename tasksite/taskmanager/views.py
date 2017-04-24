@@ -111,20 +111,22 @@ def view_task(request, task_id):
         instance.task = task
         instance.save()
         
-        comments = comments.exclude(created_by=request.user)
+        comments_list = Comment.objects.filter(task=task)
         targets = []
         for comment in comments:
-            targets.append(comment.created_by)
+            if comment.created_by not in targets:
+                targets.append(comment.created_by)
         if task.assignee not in targets:
             targets.append(task.assignee)
         if task.created_by not in targets:
             targets.append(task.created_by)
-        if instance.created_by != instance.task.assignee:
-            notify_comment(
-                instance,
-                request.build_absolute_uri(request.get_full_path()),
-                targets
-            )
+        if request.user in targets:
+            targets.remove(request.user)
+        notify_comment(
+            instance,
+            request.build_absolute_uri(request.get_full_path()),
+            targets
+        )
         commentform = CommentForm()
     context = {
         'task': task,
